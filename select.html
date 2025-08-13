@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Add Dish — The Limitless She Buffet</title>
 <style>
-:root{
-  --cream:#FDF4D7; --ink:#2F2F2F; --muted:#3D3D3D; --border:#FDF4D7; --blue:#91C8E4;
-}
+:root{ --cream:#FDF4D7; --ink:#2F2F2F; --muted:#3D3D3D; --border:#FDF4D7; --blue:#91C8E4; }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, "Noto Sans", sans-serif}
@@ -27,8 +25,10 @@ ul{margin:8px 0 0 18px}
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .btn{appearance:none;border:1px solid var(--ink);background:var(--ink);color:#fff;padding:10px 14px;border-radius:12px;font-weight:700;text-decoration:none;cursor:pointer}
 .btn.ghost{background:#fff;color:var(--ink);border-color:#d9d4c3}
-/* Requested: 12px for the two secondary buttons */
+/* 12px for the two secondary buttons */
 #finishBtn, #clearBtn{font-size:12px}
+/* put the secondary row under the list with extra spacing */
+.btns-secondary{margin-top:14px}
 .small{color:#666;font-size:12px}
 .hr{height:1px;background:var(--cream);margin:14px 0}
 .note{background:#fff5c7;border:1px dashed #e2d89b;padding:10px 12px;border-radius:12px}
@@ -60,11 +60,10 @@ ul{margin:8px 0 0 18px}
 
     <div class="card">
       <p id="which">Dish:</p>
+
+      <!-- Primary action row -->
       <div class="btns">
         <button class="btn" id="addBtn">＋ Add this dish</button>
-        <!-- Checkout now 🥡 FIRST, then Clear -->
-        <a class="btn ghost" id="finishBtn" href="./finish.html">Checkout now 🥡</a>
-        <button class="btn ghost" id="clearBtn">Clear & Start over</button>
       </div>
 
       <div class="hr"></div>
@@ -72,7 +71,13 @@ ul{margin:8px 0 0 18px}
       <p><strong>Your current selection</strong>:</p>
       <ul id="list"></ul>
 
-      <div id="next" class="note hidden" style="margin-top:12px;">
+      <!-- Secondary action row UNDER the list -->
+      <div class="btns btns-secondary" id="secondaryRow">
+        <a class="btn ghost" id="finishBtn" href="./finish.html">Checkout now</a>
+        <button class="btn ghost" id="clearBtn">Clear & Start over</button>
+      </div>
+
+      <div id="next" class="note hidden" style="margin-top:14px;">
         You can now leave this page and continue scanning other dishes!
       </div>
 
@@ -114,6 +119,8 @@ function renderList(){
   } else {
     dishes.forEach(d => { const li = document.createElement('li'); li.textContent = nameOf(d); listEl.appendChild(li); });
   }
+  // Show secondary row only when there is at least one dish
+  document.getElementById('secondaryRow').style.display = dishes.length ? 'flex' : 'none';
 }
 renderList();
 
