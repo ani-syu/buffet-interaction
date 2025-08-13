@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>加入餐點</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+</style>
+</head>
+<body>
+<h2>餐點已加入！</h2>
+<p id="message"></p>
+<a href="javascript:history.back()">← 返回</a>
+
+<script>
+  // 從 URL 取得 item 參數
+  const params = new URLSearchParams(window.location.search);
+  const item = params.get('item');
+
+  if (item) {
+    // 讀取現有菜單
+    let dishes = JSON.parse(localStorage.getItem('selectedDishes') || '[]');
+    // 如果還沒加過就加入
+    if (!dishes.includes(item)) {
+      dishes.push(item);
+      localStorage.setItem('selectedDishes', JSON.stringify(dishes));
+    }
+    document.getElementById('message').textContent = `已加入：${item}`;
+  } else {
+    document.getElementById('message').textContent = '沒有指定餐點';
+  }
+</script>
+</body>
+</html>

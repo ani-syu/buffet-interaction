@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>完成點餐</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+</style>
+</head>
+<body>
+<h2>生成菜單中...</h2>
+
+<script>
+  const dishes = JSON.parse(localStorage.getItem('selectedDishes') || '[]');
+  if (dishes.length > 0) {
+    const url = `/dishes?id=${dishes.join(',')}`;
+    // 跳轉到菜單頁
+    window.location.href = url;
+  } else {
+    document.body.innerHTML = '<h2>你還沒有選擇餐點</h2>';
+  }
+</script>
+</body>
+</html>
