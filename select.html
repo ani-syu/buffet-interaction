@@ -19,7 +19,7 @@ html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);
 .container{max-width:720px;margin:0 auto;padding:24px}
 .header{display:flex;align-items:center;gap:14px;margin:14px 0 18px;justify-content:center}
 .logo{height:90px;background:transparent;box-shadow:none}
-.card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 18px 20px;box-shadow:0 4px 14px rgba(0,0,0,.03)}
+.card{position:relative;background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 18px 20px;box-shadow:0 4px 14px rgba(0,0,0,.03)}
 p{line-height:1.7;margin:8px 0}
 ul{margin:8px 0 0 18px}
 .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
@@ -32,6 +32,22 @@ ul{margin:8px 0 0 18px}
 .hr{height:1px;background:var(--cream);margin:14px 0}
 .note{background:#fff5c7;border:1px dashed #e2d89b;padding:10px 12px;border-radius:12px}
 .hidden{display:none}
+/* Toast */
+.toast{position:fixed;right:16px;bottom:16px;background:#111;color:#fff;
+  padding:10px 14px;border-radius:10px;font-size:12px;opacity:0;transform:translateY(6px);
+  transition:opacity .22s ease, transform .22s ease; z-index:9999; max-width:70vw}
+.toast.show{opacity:1; transform:translateY(0)}
+/* Check pulse */
+.pulse{position:absolute; right:16px; top:16px; width:34px; height:34px; border-radius:50%;
+  background:#27AE60; color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:800; box-shadow:0 6px 18px rgba(39,174,96,.35); opacity:0; transform:scale(.8)}
+@keyframes pop {
+  0%{opacity:0; transform:scale(.6)}
+  40%{opacity:1; transform:scale(1.1)}
+  60%{transform:scale(.95)}
+  100%{opacity:1; transform:scale(1)}
+}
+.pulse.show{animation:pop .38s ease forwards}
 </style>
 </head>
 <body>
@@ -58,6 +74,7 @@ ul{margin:8px 0 0 18px}
     <div class="header"><img class="logo" src="/logo.png" alt="The Limitless She Buffet Logo"/></div>
 
     <div class="card">
+      <div id="pulse" class="pulse">✓</div>
       <p id="which">Dish:</p>
 
       <div class="hr"></div>
@@ -78,6 +95,8 @@ ul{margin:8px 0 0 18px}
       <p class="small">Everything is stored locally on your device. Nothing is uploaded.</p>
     </div>
   </div>
+
+<div id="toast" class="toast">Added. You can now leave this page and continue scanning other dishes!</div>
 
 <script>
 const NAMES = {
@@ -111,24 +130,39 @@ function renderList(){
   } else {
     dishes.forEach(d => { const li = document.createElement('li'); li.textContent = nameOf(d); listEl.appendChild(li); });
   }
-  // Show secondary row only when there is at least one dish
   document.getElementById('secondaryRow').style.display = dishes.length ? 'flex' : 'none';
 }
 
-// AUTO-ADD on page load
+// Toast + pulse helpers
+function showToast(){
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+function pulse(){
+  const p = document.getElementById('pulse');
+  p.classList.remove('show'); // restart animation
+  void p.offsetWidth;
+  p.classList.add('show');
+}
+
 (function autoAdd(){
   document.getElementById('which').innerHTML = 'Dish: <strong>' + (item ? nameOf(item) : 'Not specified') + '</strong>';
   if(!item){ renderList(); return; }
 
   let dishes = read();
+  let added = false;
   if(!dishes.includes(item)){
-    dishes.push(item);
-    write(dishes);
+    dishes.push(item); write(dishes); added = true;
   }
-  // Always show the leave-note on load (even if it was already added)
+  // Always show the leave-note on load
   document.getElementById('next').classList.remove('hidden');
   if (navigator.vibrate) try { navigator.vibrate(30); } catch(e){}
   renderList();
+
+  // Feedback
+  showToast();
+  pulse();
 })();
 
 document.getElementById('clearBtn').addEventListener('click', () => {
