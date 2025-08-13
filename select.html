@@ -27,7 +27,6 @@ ul{margin:8px 0 0 18px}
 .btn.ghost{background:#fff;color:var(--ink);border-color:#d9d4c3}
 /* 12px for the two secondary buttons */
 #finishBtn, #clearBtn{font-size:12px}
-/* put the secondary row under the list with extra spacing */
 .btns-secondary{margin-top:14px}
 .small{color:#666;font-size:12px}
 .hr{height:1px;background:var(--cream);margin:14px 0}
@@ -61,11 +60,6 @@ ul{margin:8px 0 0 18px}
     <div class="card">
       <p id="which">Dish:</p>
 
-      <!-- Primary action row -->
-      <div class="btns">
-        <button class="btn" id="addBtn">＋ Add this dish</button>
-      </div>
-
       <div class="hr"></div>
 
       <p><strong>Your current selection</strong>:</p>
@@ -73,7 +67,7 @@ ul{margin:8px 0 0 18px}
 
       <!-- Secondary action row UNDER the list -->
       <div class="btns btns-secondary" id="secondaryRow">
-        <a class="btn ghost" id="finishBtn" href="./finish.html">Checkout now 🥡</a>
+        <a class="btn ghost" id="finishBtn" href="./finish.html">Checkout now</a>
         <button class="btn ghost" id="clearBtn">Clear & Start over</button>
       </div>
 
@@ -108,8 +102,6 @@ const read = () => JSON.parse(localStorage.getItem(KEY) || '[]');
 const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
 const nameOf = (id) => NAMES[id] || "Untitled Dish";
 
-document.getElementById('which').innerHTML = 'Dish: <strong>' + (item ? nameOf(item) : 'Not specified') + '</strong>';
-
 function renderList(){
   const listEl = document.getElementById('list');
   const dishes = read();
@@ -122,18 +114,22 @@ function renderList(){
   // Show secondary row only when there is at least one dish
   document.getElementById('secondaryRow').style.display = dishes.length ? 'flex' : 'none';
 }
-renderList();
 
-document.getElementById('addBtn').addEventListener('click', () => {
-  if(!item){ alert('This QR code has no dish id.'); return; }
+// AUTO-ADD on page load
+(function autoAdd(){
+  document.getElementById('which').innerHTML = 'Dish: <strong>' + (item ? nameOf(item) : 'Not specified') + '</strong>';
+  if(!item){ renderList(); return; }
+
   let dishes = read();
   if(!dishes.includes(item)){
-    dishes.push(item); write(dishes);
+    dishes.push(item);
+    write(dishes);
   }
-  renderList();
+  // Always show the leave-note on load (even if it was already added)
   document.getElementById('next').classList.remove('hidden');
-  if (navigator.vibrate) navigator.vibrate(50);
-});
+  if (navigator.vibrate) try { navigator.vibrate(30); } catch(e){}
+  renderList();
+})();
 
 document.getElementById('clearBtn').addEventListener('click', () => {
   if(confirm('Clear your current selection?')){
