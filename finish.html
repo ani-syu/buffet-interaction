@@ -1,24 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>完成點餐</title>
-<style>
-  body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>完成點餐｜The Limitless She Buffet</title>
+  <style>
+    html,body { margin:0; padding:0; background:#fff; color:#111; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial; }
+    .wrap { max-width:520px; margin: 12vh auto; padding:24px; text-align:center; }
+    h1 { font-size:24px; margin:0 0 6px; }
+    p { line-height:1.6; }
+    .muted { color:#666; }
+    .btn { display:inline-block; margin-top:14px; padding:10px 14px; border-radius:10px; border:1px solid #222; background:#111; color:#fff; text-decoration:none; font-weight:600; }
+    .ghost { background:#fff; color:#111; border-color:#ddd; }
+    code { background:#f6f6f6; padding: 2px 6px; border-radius:6px; }
+  </style>
 </head>
 <body>
-<h2>生成菜單中...</h2>
+  <div class="wrap">
+    <h1>生成中…</h1>
+    <p class="muted">請稍候，我們正在組合你的專屬餐單。</p>
+    <p id="debug" class="muted"></p>
+    <a id="open" class="btn" href="#" style="display:none">打開餐單</a><br/>
+    <a class="btn ghost" href="./select.html?item=">返回選擇</a>
+  </div>
 
-<script>
-  const dishes = JSON.parse(localStorage.getItem('selectedDishes') || '[]');
-  if (dishes.length > 0) {
-    const url = `/dishes?id=${dishes.join(',')}`;
-    // 跳轉到菜單頁
-    window.location.href = url;
-  } else {
-    document.body.innerHTML = '<h2>你還沒有選擇餐點</h2>';
-  }
-</script>
+  <script>
+    const key = 'selectedDishes';
+    const dishes = JSON.parse(localStorage.getItem(key) || '[]');
+
+    // 你的主站菜單頁網址（固定）
+    const BASE = 'https://the-limitless-she-buffet.vercel.app/dishes?id=';
+
+    function finish() {
+      if (!dishes || dishes.length === 0) {
+        document.querySelector('h1').textContent = '還沒有選擇餐點';
+        document.querySelector('.muted').textContent = '請返回掃描餐點 QR code。';
+        return;
+      }
+      const url = BASE + encodeURIComponent(dishes.join(','));
+      // 立即前往
+      window.location.href = url;
+      // 如果瀏覽器阻擋跳轉，顯示按鈕
+      const a = document.getElementById('open');
+      a.href = url;
+      a.style.display = 'inline-block';
+      document.getElementById('debug').innerHTML = '<code>' + url + '</code>';
+    }
+
+    // 自動執行
+    finish();
+  </script>
 </body>
 </html>
