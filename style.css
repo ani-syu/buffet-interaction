@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    background-color: #FDF4D7;
+    font-family: Georgia, serif;
+}
+
+.banner {
+    background-color: #A6CEE3;
+    color: #3D3D3D;
+    font-size: 11px;
+    padding: 5px 0;
+}
+
+.logo {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.logo img {
+    max-width: 300px;
+    height: auto;
+}
