@@ -1,0 +1,21 @@
+STYLE GUIDE - The Limitless She Buffet
+
+1. Colors:
+   - Background: #FDF4D7
+   - Banner text color: #3D3D3D
+   - Banner background: #A6CEE3 (可調整成與設計圖一致的藍色)
+   - Text: Georgia Regular, 11px
+
+2. Logo:
+   - Use transparent background PNG (logo_transparent.png)
+
+3. Banner (Marquee) Text:
+   *Allergic Notice: Some ingredients may not sit lightly.
+   *Allergic Notice: Some ingredients may not sit lightly.
+   *Allergic Notice: Some ingredients may not sit lightly.
+
+4. Layout order (top to bottom):
+   - Blue banner (marquee)
+   - Transparent background logo
+   - Main content (A to Z dishes)
+
